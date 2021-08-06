@@ -1,0 +1,75 @@
+sempas-db
+
+//DB de usuários
+usuario (pessoa que usa a sempas):
+   -> id (PK)
+   -> func_id
+   -> nome
+   -> endereço
+   -> RG
+   -> cpf
+   -> nis
+   -> setor do cadastro (cras, creas, sempas)
+   -> atendimento (assistente social, projetos, psicóloga, auxílios)
+   -> data de criação
+
+documentos (fotos, guarda-se os caminhos das imagens):
+    -> id (PK)
+    -> id do usuário (FK)
+    -> RG frente
+    -> RG verso (se for o caso)
+    -> CPF
+    -> comprovante de residência
+
+visitas (para o usuário que veio por auxílios):
+    -> id (PK)
+    -> id do usuário (FK)
+    -> id do funcionario (FK)
+    -> data da visitas
+    -> motivo da visita (atendimento, auxílio, etc)
+    -> setor da visita (cras, creas, sempas)
+    -> valor (caso haja)
+    -> observações
+
+relatórios sociais (para cada visita):
+    -> id (PK)
+    -> id da visita (FK)
+    -> texto do relatório
+    -> data de criação
+
+//DB da secretaria
+funcionarios:
+    -> id (PK)
+    -> nome
+    -> RG
+    -> CPF
+    -> endereco
+    -> email
+    -> login
+    -> senha (hash)
+    -> cargo ("role", limitador de acesso) (cargos: Administrador, Psicólogo, Assistente Social, Agente, Motorista)
+    -> data_criacao
+
+
+
+//DB Garagem
+veiculos:
+    -> id (PK)
+    -> id do funcionário (FK)
+    -> placa
+    -> ano
+    -> marca
+    -> modelo
+    -> quilometragem inicial - km_inicial
+    -> quilometragem atual - odometro
+    -> data de criação
+
+rotas:
+    -> id (PK)
+    -> id veículo (FK)
+    -> km inicio
+    -> km fim
+    -> km total
+    -> data e hora da rota
+    -> data de criação
+
