@@ -1,4 +1,6 @@
 $(document).ready(function(){
+    //Variables
+    const warning = $(".warning")
 
 //LOGIN
     $("#formLogin").submit(function(e){
@@ -14,11 +16,17 @@ $(document).ready(function(){
                     alert('Logado com sucesso')
                     window.location.href = 'index.php?pg='
                 }else if(res == 'err-user'){
-                    alert('Opa, erro em login')
+                    $("p.alert-danger").html("Login inválido.");
+                    $("div.error").slideDown(300).delay(2500).slideUp(300);
+                    //alert('Opa, erro em login')
                 }else if(res == 'err-pass'){
-                    alert('Opa, erro na senha')
+                    $("p.alert-danger").html("Senha inválida.");
+                    $("div.error").slideDown(300).delay(2500).slideUp(300);
+                    //alert('Opa, erro na senha')
                 }else{
-                    alert('Parece que houve um erro inesperado...')
+                    $("p.alert-danger").html("Algo de errado não está certo...");
+                    $("div.error").slideDown(300).delay(2500).slideUp(300);
+                    //alert('Parece que houve um erro inesperado...')
                 }
             }
         })
@@ -43,19 +51,17 @@ $(document).ready(function(){
     //Controle de visibilidade de formulário
     $("#novoCadastro").click(function(){
         if($("#novoCadastroForm").hasClass('hidden')){
-            $("#novoCadastroForm").removeClass('hidden')
-            $("#buscaForm").addClass('hidden')
-            $("#buscaErro").addClass('hidden')
-            $("#buscaResultado").addClass('hidden')
+            $("#novoCadastroForm").slideDown(300)
+            $("#buscaForm").slideUp(300)
+            $("#buscaResultado").slideUp(300)
             $("#novoCadastroForm")[0].reset()
         }
     })
     $("#buscaCadastro").click(function(){
         if($("#buscaForm").hasClass('hidden')){
-            $("#buscaForm").removeClass('hidden')
-            $("#novoCadastroForm").addClass('hidden')
-            $("#buscaErro").addClass('hidden')
-            $("#buscaResultado").addClass('hidden')
+            $("#buscaForm").slideDown(300)
+            $("#novoCadastroForm").slideUp(300)
+            $("#buscaResultado").slideUp(300)
         }
     })
 
@@ -70,10 +76,12 @@ $(document).ready(function(){
             dataType: 'text',
             success:function(res){
                 if(res == 'err-user'){
-                    alert("Algo deu errado.")
+                    $("p.alert-danger").html("Algo deu errado");
+                    $("div.error").slideDown(300).delay(2500).slideUp(300);
                 }else if(res == 'ok'){
-                    alert("Usuário cadastrado com sucesso.")
-                    $("#novoCadastroForm")[0].reset()
+                    $("p.alert-success").html("Usuário registrado com sucesso");
+                    $("div.success").slideDown(300).delay(2500).slideUp(300);
+                    $("#novoCadastroForm")[0].reset();
                 }
             }
         })
@@ -87,47 +95,64 @@ $(document).ready(function(){
             type: 'POST',
             url: 'core/control/recepcaoCtl.php?op=busca',
             data: form,
-            dataType: 'text',
+            dataType: 'json',
             success:function(res){
-                //O script recepcaoCtl.php manda uma resposta em echo
-                //concatenada com o termo da busca e divididas por um '.'. Aqui
-                //a resposta é dividida no . e o elemento 0 é a resposta do servidor
-                //enquanto que o 1 é o termo buscado retornado 
-                var result = res.split(';')
-                //alert (result[0] + " " + result[1])
-                if(result[0] == 'err-busca'){
-                    $("#buscaErro").removeClass('hidden')
-                    $("#buscaResultado").addClass('hidden')
-                    $("#buscaErro").html("A busca por " +result[1]+ " não retornou nenhum resultado.")
+                //NEW CODE
+                //Envia e recebe json, não mais texto. Agora tem como tratar e mostrar
+                //mais de um array de resultado de busca.
+                //Falta organizar as informações no front-end em uma tabela
+                alert(res)
+                if(res == 'err-busca'){
+                    console.log("Erro"+res)
                 }else{
-                    // $("#buscaErro").removeClass('hidden')
-                    // $("#buscaErro").html(result[0])
-                    $("#buscaResultado").removeClass('hidden')
-                    $("#buscaErro").addClass('hidden')
-                    $("input[name=nome]").val(result[0])
-                    $("input[name=rg]").val(result[1])
-                    $("input[name=cpf]").val(result[2])
-                    $("input[name=nis]").val(result[3])
-                    $("input[name=end]").val(result[4])
-                    $("select[name=setor]").append("<option>"+result[5]+"</option>")
-                    $("input[name=atendimento]").val(result[6])
+                    for(i = 0; i < res.length; i++){
+                        console.log(res[i])
+                    }
                 }
+
+                //OLD CODE
+                //O script recepcaoCtl.php manda uma resposta em echo
+                //concatenada com o termo da busca e divididas por um ';'. Aqui
+                //a resposta é dividida no ; e o elemento 0 é a resposta do servidor
+                //enquanto que o 1 é o termo buscado retornado 
+                //var result = res.split(';')
+                //alert (result[0] + " " + result[1])
+                // if(result[0] == 'err-busca'){
+                //     $("p.alert-danger").html("A busca por " +result[1]+ " não retornou nenhum resultado.")
+                //     $("div.error").slideDown(300).delay(2500).slideUp(300)
+                //     $("#buscaResultado").slideUp(300)
+                // }else{
+                //     // $("#buscaErro").removeClass('hidden')
+                //     // $("#buscaErro").html(result[0])
+                //     $("#buscaResultado").slideDown(300)
+                //     $("input[name=nome]").val(result[0])
+                //     $("input[name=rg]").val(result[1])
+                //     $("input[name=cpf]").val(result[2])
+                //     $("input[name=nis]").val(result[3])
+                //     $("input[name=end]").val(result[4])
+                //     $("select[name=setor]").append("<option>"+result[5]+"</option>")
+                //     $("input[name=atendimento]").val(result[6])
+                // }
             }
         })
     })
+
+//ACOMPANHAMENTO
+
 
 //GARAGEM
     //Controle de visibilidade de formulário
     $("#novoCarro").click(function(){
         if($("#novoCarroForm").hasClass('hidden')){
-            $("#novoCarroForm").removeClass('hidden')
-            $("#novaRotaForm").addClass('hidden')
+            $("#novoCarroForm").slideDown(300)
+            $("#novaRotaForm").slideUp(300)
+            $("#novoCarroForm")[0].reset()
         }
     })
     $("#novaRota").click(function(){
         if($("#novaRotaForm").hasClass('hidden')){
-            $("#novaRotaForm").removeClass('hidden')
-            $("#novoCarroForm").addClass('hidden')
+            $("#novaRotaForm").slideDown(300)
+            $("#novoCarroForm").slideUp(300)
         }
     })
 
@@ -142,13 +167,22 @@ $(document).ready(function(){
             dataType: 'text',
             success: function(res){
                 if(res == 'ok'){
-                    alert ("Veículo salvo na base de dados.")
+                    $("p.alert-success").html("Veículo registrado com sucesso.");
+                    $("div.success").slideDown(300).delay(2500).slideUp(300);
+                    $("#novoCarroForm")[0].reset();
+                    //alert ("Veículo salvo na base de dados.")
                 }else if(res == 'err-vehicle'){
-                    alert("Erro ao salvar veículo")
+                    $("p.alert-danger").html("Erro ao salvar veículo");
+                    $("div.error").slideDown(300).delay(2500).slideUp(300);
+                    //alert("Erro ao salvar veículo")
                 }else if(res == 'exists'){
-                    alert ("Veículo já existe.")
+                    $("p.alert-danger").html("Veículo já existe");
+                    $("div.error").slideDown(300).delay(2500).slideUp(300);
+                    //alert ("Veículo já existe.")
                 }else{
-                    alert ("Algo deu errado..." + res)
+                    $("p.alert-danger").html("Algo deu errado...");
+                    $("div.error").slideDown(300).delay(2500).slideUp(300);
+                    //alert ("Algo deu errado..." + res)
                 }
             }
         })
@@ -165,9 +199,14 @@ $(document).ready(function(){
             dataType: 'text',
             success: function(res){
                 if(res == 'ok'){
-                    alert ("Rota salva na base de dados.")
+                    $("p.alert-success").html("Rota criada com sucesso");
+                    $("div.success").slideDown(300).delay(2500).slideUp(300);
+                    $("#novaRotaForm")[0].reset();
+                    //alert ("Rota salva na base de dados.")
                 }else{
-                    alert ("Algo deu errado...")
+                    $("p.alert-danger").html("Algo deu errado");
+                    $("div.error").slideDown(300).delay(2500).slideUp(300);
+                    //alert ("Algo deu errado...")
                 }
             }
         })

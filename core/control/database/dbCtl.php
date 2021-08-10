@@ -1,4 +1,6 @@
 <?php
+    //Configurando a timezone do servidor
+    date_default_timezone_set('America/Belem');
     //LOGIN
     function getLogin($login){
         include 'dbCon.php';
@@ -6,7 +8,7 @@
         //proteção contra SQL injection no login, mas a senha passa por hash verify
         //e quebra a sequência de injection
         $a = sprintf("SELECT id, nome, cargo, senha FROM funcionarios WHERE login = '%s'",
-                            mysqli_real_escape_string($con, $login));
+            mysqli_real_escape_string($con, $login));
         
         //query antiga vulnerável
         //$query = mysqli_query($con, "SELECT * FROM funcionarios WHERE login = '$login'");
@@ -19,6 +21,7 @@
             //print_r($return);
             return $return;
         }
+        mysqli_close($con);
     }
 
     //USERS
@@ -30,10 +33,11 @@
             FROM usuarios WHERE nome LIKE '%$busca%' 
             OR nis = '$busca'
             OR cpf = '$busca'");
-        if(!$query){
+        //return $query;
+        if(mysqli_num_rows($query) < 1){
             return 0;
         }else{
-            $return = mysqli_fetch_array($query);
+            $return = mysqli_fetch_all($query);
             return $return;
         }
         mysqli_close($con);
@@ -42,7 +46,7 @@
     //Inclui usuário
     function setNewUser($func_id, $nome, $end, $rg, $cpf, $nis, $setor, $atendimento){
         include 'dbCon.php';
-        $date = date('Y-m-d');
+        $date = date('Y-m-d H:i:s');
         $query = mysqli_query($con, "INSERT INTO usuarios 
             (func_id, nome, endereco, rg, cpf, nis, setor, atendimento, data_criacao) 
             VALUES ('$func_id','$nome', '$end', '$rg', '$cpf', '$nis', '$setor', '$atendimento', '$date')");
@@ -201,7 +205,7 @@
     //Encontra todos os veículos
     function getAllVehiclesPlates(){
         include 'dbCon.php';
-        $query = mysqli_query($con, "SELECT placa FROM veiculos");
+        $query = mysqli_query($con, "SELECT placa, modelo FROM veiculos");
         return mysqli_fetch_all($query);
         // if(!$query){
         //     return 0;

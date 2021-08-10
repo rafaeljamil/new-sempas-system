@@ -19,17 +19,26 @@
     <script defer src="./public/scripts/controller.js"></script>
     <title>SEMPAS</title>
 </head>
-<body>
-    <h1>Sistema de Gestão SEMPAS</h1>
-    <p>Bem-vindo(a), <?php echo $nome; ?></p>
-    <p>Visualizando como <?php echo $role; ?></p>
-    <a id="logout" href="">Sair</a>
-    <div class="container-fluid">
+<body class="bg-light">
+
+    <div class="container-fluid px-4">
+        <div class="row bg-light">
+            <div class="col-auto">
+                <img style="height:12vh; width:auto;" src="public/assets/logo-sempas.png" alt="Logo-sempas">
+            </div>
+            <div class="col">
+                <h2 class="text-center">SiCGest - Sistema de Cadastro e Gestão</h2>
+            </div>
+            <div class="col-sm-auto text-end mt-2">
+                <p>Usuário: <?php echo $nome; ?></p>
+                <a class="btn btn-primary" id="logout" href="">Sair</a>
+            </div>
+        </div>
         <div class="row">
-            <div class="col-sm-1">
+            <div class="col-auto bg-light" >
                 <?php include 'core/views/_leftMenu.php'; ?>
             </div>
-            <div class="col-lg-11">
+            <div class="col my-1 overflow-auto" style="border: 2px solid gray; height:75vh; border-radius:20px">
                 <?php
                 if($_GET['pg']){
                     $pg = $_GET['pg'];
@@ -41,10 +50,13 @@
                             include 'core/views/recepcao.php';
                             break;   
                         case 'ac':
-                            include 'core/views/cadastro.php';
+                            include 'core/views/acompanhamento.php';
                             break;    
                         case 'ad':
                             include 'core/views/garagem.php';
+                            break;
+                        case 'ae':
+                            include 'core/views/funcionarios.php';
                             break;                 
                         default:
                             break;
@@ -52,16 +64,11 @@
                 }else{
                     echo '<h2>Home</h2>';
                 }
-
-                    // if($pg == 'aa'){
-                    //     include 'core/views/dashboard.php';
-                    // }else{
-                    //     return;
-                    // }
-
-
                 ?>
             </div>
+        </div>
+        <div class="row bg-light">
+            <?php include 'core/views/_footer.php'; ?>
         </div>
     </div>
     

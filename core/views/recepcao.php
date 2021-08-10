@@ -1,22 +1,20 @@
-<?php
-    $_SESSION['user_nome'] = "";
-    $_SESSION['user_cpf'] = "";
-    $_SESSION['user_rg'] = "";
-    $_SESSION['user_nis'] = "";
-    $_SESSION['user_end'] = "";
-    $_SESSION['user_setor'] = "";
-    $_SESSION['user_atend'] = "";
-?>
-<head>
-    <META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-</head>
- <div class="container w-75">
-    <h2 class="text-center">Recepção</h2>
-    <div class="row text-center">
-        <div class="col">
+<div class="container w-75">
+    <h3 class="text-center">Recepção</h3>
+    <div class="d-flex justify-content-center">
+        <div class="success hidden">
+            <p class='alert alert-success'></p>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center">
+        <div class="error hidden">
+            <p class='alert alert-danger'></p>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center">
+        <div class="mx-1">
             <button id="novoCadastro" class="btn btn-primary">Cadastrar</button>
         </div>
-        <div class="col">
+        <div class="mx-1">
             <button id="buscaCadastro" class="btn btn-primary">Buscar</button>
         </div>
     </div>
