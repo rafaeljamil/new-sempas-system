@@ -28,19 +28,23 @@ if($op === 'busca'){
 
 }else if($op === 'novo'){
     session_start();
-    $func_id = $_SESSION['func_id'];
-    $nome = $_POST['nome'];
-    $cpf = $_POST['cpf'];
-    $rg = $_POST['rg'];
-    $nis = $_POST['nis'];
-    $end = $_POST['end'];
-    $setor = $_POST['setor'];
-    $atendimento = $_POST['atendimento'];
+    //No código antigo cada dado diferente era passado por sua variável específica,
+    //agora apenas um array é passado, contendo todas as informações como valores de
+    //suas chaves específicas
+    $newUser = [];
+    $newUser['func_id'] = $_SESSION['func_id'];
+    $newUser['nome'] = $_POST['nome'];
+    $newUser['cpf'] = $_POST['cpf'];
+    $newUser['rg'] = $_POST['rg'];
+    $newUser['nis'] = $_POST['nis'];
+    $newUser['end'] = $_POST['end'];
+    $newUser['setor'] = $_POST['setor'];
+    $newUser['atendimento'] = $_POST['atendimento'];
 
     include 'database/dbCtl.php';
-    $a = setNewUser($func_id, $nome, $end, $rg, $cpf, $nis, $setor, $atendimento);
+    $a = setNewUser($newUser);
     if($a === 0){
-        echo "err-user";
+        echo "err-user ";
     }else{
         echo "ok";
     }

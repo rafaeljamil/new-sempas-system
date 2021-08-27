@@ -44,12 +44,27 @@
     }
 
     //Inclui usuário
-    function setNewUser($func_id, $nome, $end, $rg, $cpf, $nis, $setor, $atendimento){
+    function setNewUser($newUser){
         include 'dbCon.php';
         $date = date('Y-m-d H:i:s');
-        $query = mysqli_query($con, "INSERT INTO usuarios 
-            (func_id, nome, endereco, rg, cpf, nis, setor, atendimento, data_criacao) 
-            VALUES ('$func_id','$nome', '$end', '$rg', '$cpf', '$nis', '$setor', '$atendimento', '$date')");
+        //A nova query recebe uma string formatada e os dados estão em uma única variável e 
+        //são acessados pelas chaves de cada informação específica
+        $a = sprintf("INSERT INTO usuarios 
+            (func_id, nome, endereco, rg, cpf, nis, setor, atendimento, data_criacao)
+            VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '$date')",  
+                $newUser['func_id'], 
+                $newUser['nome'], 
+                $newUser['end'],
+                $newUser['rg'],
+                $newUser['cpf'],
+                $newUser['nis'],
+                $newUser['setor'],
+                $newUser['atendimento']);
+        $query = mysqli_query($con, $a);
+        //query antiga com muitas variáveis
+        // $query = mysqli_query($con, "INSERT INTO usuarios 
+        //     (func_id, nome, endereco, rg, cpf, nis, setor, atendimento, data_criacao) 
+        //     VALUES ('$func_id','$nome', '$end', '$rg', '$cpf', '$nis', '$setor', '$atendimento', '$date')");
         if(!$query){
             return 0;
         }else{
@@ -59,32 +74,21 @@
 
     //Edita usuário
 
-    //Edita nome
-    function updateUserName($cpf, $nome){
+    function updateUser($cpf, $user){
         include 'dbCon.php';
-        $query = mysqli_query($con, "UPDATE users SET 'nome' = '$nome' WHERE 'cpf' = '$cpf'");
-        if(!$query){
-            return 0;
-        }else{
-            return "ok";
-        }
-    }
-
-    //Edita endereço
-    function updateUserEnd($cpf, $end){
-        include 'dbCon.php';
-        $query = mysqli_query($con, "UPDATE users SET 'endereco' = '$end' WHERE 'cpf' = '$cpf'");
-        if(!$query){
-            return 0;
-        }else{
-            return "ok";
-        }
-    }
-
-    //Edita nis
-    function updateUserNis($cpf, $nis){
-        include 'dbCon.php';
-        $query = mysqli_query($con, "UPDATE users SET 'nis' = '$nis' WHERE 'cpf' = '$cpf'");
+        $findUser = getUser($cpf);
+        $a = sprintf("UPDATE usuarios 
+            SET 'nome' = '%s', 'endereco' = '%s', 'rg' = '%s', 'cpf' = '%s', 'nis' = '%s', 'setor' = '%s', 'atendimento' = '%s'
+            WHERE 'id' ='%s' ",
+            $user['nome'], 
+            $user['end'],
+            $user['rg'],
+            $user['cpf'],
+            $user['nis'],
+            $user['setor'],
+            $user['atendimento'],
+            $findUser['id']);
+        $query = mysqli_query($con, $a);
         if(!$query){
             return 0;
         }else{

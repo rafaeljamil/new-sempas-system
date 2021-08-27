@@ -3,6 +3,9 @@
     if(!isset($_SESSION['func_id'])){
         header("location: login.html");
     }
+    if($_COOKIE['login'] != 'acessoGarantido'){
+        header('location: login.html');
+    }
     $nome = $_SESSION['func_nome'];
     $role = $_SESSION['func_role'];
 ?>
@@ -40,23 +43,23 @@
             </div>
             <div class="col my-1 overflow-auto" style="border: 2px solid gray; height:75vh; border-radius:20px">
                 <?php
-                if($_GET['pg']){
+                if(isset($_GET['pg'])){
                     $pg = $_GET['pg'];
                     switch($pg){
                         case 'aa':
-                            include 'core/views/dashboard.php';
+                            include 'core/views/dashboard.html';
                             break;
                         case 'ab':
-                            include 'core/views/recepcao.php';
+                            include 'core/views/recepcao.html';
                             break;   
                         case 'ac':
-                            include 'core/views/acompanhamento.php';
+                            include 'core/views/acompanhamento.html';
                             break;    
                         case 'ad':
                             include 'core/views/garagem.php';
                             break;
                         case 'ae':
-                            include 'core/views/funcionarios.php';
+                            include 'core/views/funcionarios.html';
                             break;                 
                         default:
                             break;
@@ -68,7 +71,7 @@
             </div>
         </div>
         <div class="row bg-light">
-            <?php include 'core/views/_footer.php'; ?>
+            <?php include 'core/views/_footer.html'; ?>
         </div>
     </div>
     

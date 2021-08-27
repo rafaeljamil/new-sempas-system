@@ -1,6 +1,4 @@
 $(document).ready(function(){
-    //Variables
-    const warning = $(".warning")
 
 //LOGIN
     $("#formLogin").submit(function(e){
@@ -13,8 +11,8 @@ $(document).ready(function(){
             dataType: 'text',
             success: function(res){
                 if(res == 'ok'){
-                    alert('Logado com sucesso')
-                    window.location.href = 'index.php?pg='
+                    //alert('Logado com sucesso')
+                    window.location.href = 'index.php'
                 }else if(res == 'err-user'){
                     $("p.alert-danger").html("Login inválido.");
                     $("div.error").slideDown(300).delay(2500).slideUp(300);
@@ -26,7 +24,7 @@ $(document).ready(function(){
                 }else{
                     $("p.alert-danger").html("Algo de errado não está certo...");
                     $("div.error").slideDown(300).delay(2500).slideUp(300);
-                    //alert('Parece que houve um erro inesperado...')
+                    //alert('Parece que houve um erro inesperado...'+res)
                 }
             }
         })
@@ -75,6 +73,7 @@ $(document).ready(function(){
             data: form,
             dataType: 'text',
             success:function(res){
+                alert(res)
                 if(res == 'err-user'){
                     $("p.alert-danger").html("Algo deu errado");
                     $("div.error").slideDown(300).delay(2500).slideUp(300);
@@ -97,42 +96,50 @@ $(document).ready(function(){
             data: form,
             dataType: 'json',
             success:function(res){
-                //NEW CODE
                 //Envia e recebe json, não mais texto. Agora tem como tratar e mostrar
                 //mais de um array de resultado de busca.
-                //Falta organizar as informações no front-end em uma tabela
-                alert(res)
+                //Cria uma tabela e adiciona linhas para cada resultado
+                
                 if(res == 'err-busca'){
-                    console.log("Erro"+res)
+                    $("p.alert-danger").html("A busca não retornou resultados");
+                    $("div.error").slideDown(300).delay(2500).slideUp(300);
                 }else{
-                    for(i = 0; i < res.length; i++){
-                        console.log(res[i])
+                    //Criando a tabela
+                    var nRows = res.length;
+                    var nCols = 3;
+                    var tBody = '<table class="table w-50 text-center" >';
+                    //Adicionando o nome das colunas da tabela
+                    tBody += '<tr><td>Nome</td><td>Endereço</td><td>CPF</td></tr>'
+                    //Iteração que cria uma linha de tabela para cada resultado e
+                    //alimenta a tabela com nome(0), endereço(4) e CPF(2)
+                    for(i = 0; i < nRows; i++){
+                        tBody += "<tr>"
+                        //console.log(res[i])
+                        a = res[i][0]
+                        b = res[i][4]
+                        c = res[i][2]
+                        newRes = [a, b, c]
+                        
+                        console.log(newRes)
+                        for(j = 0; j < nCols; j++){
+                            console.log(newRes[j])
+                            
+                            tBody += "<td>"
+                            tBody += newRes[j]
+                            tBody +="</td>"
+                        }
+                        //Ao final de cada linha vai um botão que manda a requisição de acessar
+                        //a página específica do cadastro com o CPF do usuário encontrado
+                        tBody += `<td><a href="teste.php?cpf=${c}" class="btn btn-primary">Ver</a></td>`
+                        tBody += "</tr>"
                     }
+                    //Fechando a tabela
+                    tBody += "</table>"
+                    //Adicionando a tabela pronta ao div resultado
+                    $("#resultado").html(tBody)
+                    //$("resultado").slideDown(300)
+                    
                 }
-
-                //OLD CODE
-                //O script recepcaoCtl.php manda uma resposta em echo
-                //concatenada com o termo da busca e divididas por um ';'. Aqui
-                //a resposta é dividida no ; e o elemento 0 é a resposta do servidor
-                //enquanto que o 1 é o termo buscado retornado 
-                //var result = res.split(';')
-                //alert (result[0] + " " + result[1])
-                // if(result[0] == 'err-busca'){
-                //     $("p.alert-danger").html("A busca por " +result[1]+ " não retornou nenhum resultado.")
-                //     $("div.error").slideDown(300).delay(2500).slideUp(300)
-                //     $("#buscaResultado").slideUp(300)
-                // }else{
-                //     // $("#buscaErro").removeClass('hidden')
-                //     // $("#buscaErro").html(result[0])
-                //     $("#buscaResultado").slideDown(300)
-                //     $("input[name=nome]").val(result[0])
-                //     $("input[name=rg]").val(result[1])
-                //     $("input[name=cpf]").val(result[2])
-                //     $("input[name=nis]").val(result[3])
-                //     $("input[name=end]").val(result[4])
-                //     $("select[name=setor]").append("<option>"+result[5]+"</option>")
-                //     $("input[name=atendimento]").val(result[6])
-                // }
             }
         })
     })
